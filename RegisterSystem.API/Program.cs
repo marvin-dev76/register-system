@@ -3,6 +3,7 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RegisterSystem.Application.Features.Users.Commands.RegisterUser;
 using RegisterSystem.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,10 @@ builder.Services.AddAuthentication((options) =>
   };
 });
 builder.Services.AddAuthorization();
+builder.Services.AddMediatR((cfg) =>
+{
+  cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly);
+});
 
 var app = builder.Build();
 
