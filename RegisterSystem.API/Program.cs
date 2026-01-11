@@ -8,15 +8,18 @@ using Microsoft.IdentityModel.Tokens;
 using RegisterSystem.Application.Common.Interfaces;
 using RegisterSystem.Application.Features.Users.Commands.LoginUser;
 using RegisterSystem.Application.Features.Users.Commands.RegisterUser;
+using RegisterSystem.Application.Features.Users.Queries.GetUserProfile;
 using RegisterSystem.Domain.Entities;
 using RegisterSystem.Infrastructure.Authentication;
 using RegisterSystem.Infrastructure.Data;
+using RegisterSystem.Infrastructure.Services;
 
 Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<ApplicationDbContext>((options) =>
 {
   var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
@@ -55,9 +58,11 @@ builder.Services.AddMediatR((cfg) =>
 {
   cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommand).Assembly);
   cfg.RegisterServicesFromAssembly(typeof(LoginUserCommand).Assembly);
+  cfg.RegisterServicesFromAssembly(typeof(GetUserProfileQuery).Assembly);
 });
 builder.Services.AddControllers();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddScoped<IUserContext, UserContext>();
 
 var app = builder.Build();
 

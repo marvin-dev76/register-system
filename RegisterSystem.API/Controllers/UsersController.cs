@@ -9,18 +9,18 @@ namespace RegisterSystem.API.Controllers
   public class UsersController(IMediator mediator) : ApiControllerBase(mediator)
   {
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUserDTO dto)
+    public async Task<IActionResult> Register([FromBody] RegisterUserDTO dto, CancellationToken cancellationToken)
     {
       var command = new RegisterUserCommand(dto.FirstName, dto.LastName, dto.Email, dto.Password);
-      var result = await _mediator.Send(command);
+      var result = await _mediator.Send(command, cancellationToken);
       return Ok(result);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginUserDTO dto)
+    public async Task<IActionResult> Login([FromBody] LoginUserDTO dto, CancellationToken cancellationToken)
     {
       var command = new LoginUserCommand(dto.Email, dto.Password);
-      var result = await _mediator.Send(command);
+      var result = await _mediator.Send(command, cancellationToken);
       return Ok(result);
     }
   }
